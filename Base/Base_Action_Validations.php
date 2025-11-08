@@ -84,7 +84,7 @@ class Base_Action_Validations
             include_once $rutaArchivo;
             $entidad_service = $clase . "_SERVICE";
         } else {
-            include_once "./Base/Base_SERVICE.php";
+            include_once "../Base/Base_SERVICE.php";
             $entidad_service = "Base_SERVICE";
         }
         return $entidad_service;
@@ -107,7 +107,7 @@ class Base_Action_Validations
                 $array_pks[$aux] = $this->valores[$aux];
             }
         }
-
+ 
         // Pk, comprobar si existe en la base de datos 
         if ((action == 'ADD') and (count($array_pks) > 0)) {
 
@@ -116,7 +116,7 @@ class Base_Action_Validations
 
             if (!file_exists($serviceFile)) {
                 $entidad_service = "Base_SERVICE";
-                include_once "./Base/Base_SERVICE.php";
+                include_once "../Base/Base_SERVICE.php";
             } else {
                 $entidad_service = $controlador . "_SERVICE";
                 include_once $serviceFile;
@@ -124,7 +124,7 @@ class Base_Action_Validations
 
             $service = new $entidad_service($this->estructura, 'SEARCH_BY', $array_pks, $this->controlador);
             $resultado = $service->SEARCH_BY();
-
+            
             if ($resultado['code'] === 'RECORDSET_VACIO') {
                 return true;
             } else {
@@ -195,7 +195,7 @@ class Base_Action_Validations
 
         if (!file_exists($serviceFile)) {
             $entidad_service = "Base_SERVICE";
-            include_once "./Base/Base_SERVICE.php";
+            include_once "../Base/Base_SERVICE.php";
         } else {
             $entidad_service = $controlador . "_SERVICE";
             include_once $serviceFile;
@@ -228,7 +228,7 @@ class Base_Action_Validations
 
         if (!file_exists($serviceFile)) {
             $entidad_service = "Base_SERVICE";
-            include_once "./Base/Base_SERVICE.php";
+            include_once "../Base/Base_SERVICE.php";
         } else {
             $entidad_service = $controlador . "_SERVICE";
             include_once $serviceFile;
@@ -349,14 +349,14 @@ class Base_Action_Validations
                 $serviceFile = "./app/" . $entidadHija . "/" . $entidadHija . "_SERVICE.php";
                 if (!file_exists($serviceFile)) {
                     $entidad_service = "Base_SERVICE";
-                    include_once "./Base/Base_SERVICE.php";
+                    include_once "../Base/Base_SERVICE.php";
                 } else {
                     $entidad_service = $entidadHija . "_SERVICE";
                     include_once $serviceFile;
                 }
 
                 // Incluimos la descripcion y la estructura
-                include_once "./app/" . $entidadHija . "/" . $entidadHija . "_description.php";
+                include_once "../" . $entidadHija . "/" . $entidadHija . "_description.php";
                 $descripcionHijo = $entidadHija . '_description';
                 $estructuraHijo = $$descripcionHijo;
 
