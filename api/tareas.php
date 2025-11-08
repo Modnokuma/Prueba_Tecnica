@@ -12,12 +12,13 @@ function responder($texto)
     echo (json_encode($texto));
     exit();
 }
-
+define('controlador', 'tarea');
 $metodoHTTP = $_SERVER['REQUEST_METHOD'];
 
 switch ($metodoHTTP) {
     case 'PUT':
         parse_str(file_get_contents("php://input"), $variables);
+
         define('variables', $variables);
         define('action', 'ADD');
         break;
@@ -46,31 +47,16 @@ switch ($metodoHTTP) {
         break;
 }
 
-// no se envia un controlador desde el front
-if (!isset(variables['controlador'])) {
-    $feedback['ok'] = false;
-    $feedback['code'] = 'controller_not_exists_KO';
-    $feedback['resources'] = 'El controlador no existe';
-    responder($feedback);
-}
-
-// el controlador enviado no es un controlador valido de nuestro back
-$controller_file = "../" . variables['controlador'] . "/" . variables['controlador'] . "_description.php";
-
-
-if (!file_exists($controller_file)) {
-    responder('no es un controlador valido');
-}
-
 // el controlador valido no tiene definido un _CONTROLLER.php
-$controller = "../" . variables['controlador'] . "/" . variables['controlador'] . "_CONTROLLER.php";
+$controller = "../" . controlador . "/" . controlador . "_CONTROLLER.php";
 if (!file_exists($controller)) {
     $controller = "../Base/Base_CONTROLLER.php";
     $claseatratar = "Base_CONTROLLER";
 } else {
-    $claseatratar = variables['controlador'] . "_CONTROLLER";
+    $claseatratar = controlador . "_CONTROLLER";
 }
 
 // incluir el fichero del controlador y instanciar la clase del controlador
 include $controller;
 $claseinstanciada = new $claseatratar;
+

@@ -23,15 +23,15 @@ class Base_CONTROLLER extends Base_Validations
     public function __construct()
     {
         
-        $controlador = variables['controlador'];
+        $controlador = controlador;
        
         include_once "../" . $controlador . "/" . $controlador . "_description.php";
-        $description = variables['controlador'] . '_description';
+        $description = controlador . '_description';
         // Inicializar las propiedades heredadas
         $this->estructura = $$description;
         $this->valores = variables;
         $this->listaAtributos = array_keys($this->estructura['attributes']);
-        $this->controlador = variables['controlador'];
+        $this->controlador = controlador;
 
         $respuesta_validations = $this->validations();
         

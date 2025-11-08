@@ -111,7 +111,7 @@ class Base_Action_Validations
         // Pk, comprobar si existe en la base de datos 
         if ((action == 'ADD') and (count($array_pks) > 0)) {
 
-            $controlador = variables['controlador'];
+            $controlador = controlador;
             $serviceFile = "./app/" . $controlador . "/" . $controlador . "_SERVICE.php";
 
             if (!file_exists($serviceFile)) {
@@ -190,7 +190,7 @@ class Base_Action_Validations
     public function unique_value_already_exists($campo, $valorvariable)
     {
 
-        $controlador = variables['controlador'];
+        $controlador = controlador;
         $serviceFile = "./app/" . $controlador . "/" . $controlador . "_SERVICE.php";
 
         if (!file_exists($serviceFile)) {
@@ -223,7 +223,7 @@ class Base_Action_Validations
     public function edit_unique_value_already_exists($campo, $valorvariable)
     {
 
-        $controlador = variables['controlador'];
+        $controlador = controlador;
         $serviceFile = "./app/" . $controlador . "/" . $controlador . "_SERVICE.php";
 
         if (!file_exists($serviceFile)) {
