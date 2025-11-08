@@ -197,6 +197,73 @@ class Base_Mapping
     }
 
     /**
+     * personalized_prepared_query()
+     * Executes a prepared statement with bound parameters. Safer alternative to personalized_query when using user input.
+     * @param string $sql SQL with ? placeholders
+     * @param array $params Array of values to bind
+     * @return mixed mysqli_result on success or feedback array on error
+     */
+    public function personalized_prepared_query($sql, $params = array())
+    {
+        if (!($this->connection())) {
+            $this->ok = false;
+            $this->code = 'CONEXION_KO';
+            $this->construct_response();
+            return $this->feedback;
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt === false) {
+            $this->ok = false;
+            $this->code = 'SQL_PREPARE_KO';
+            $this->resource = $this->conn->error;
+            $this->construct_response();
+            return $this->feedback;
+        }
+
+        if (!empty($params)) {
+            // determine types
+            $types = '';
+            foreach ($params as $p) {
+                if (is_int($p)) {
+                    $types .= 'i';
+                } elseif (is_double($p) || is_float($p)) {
+                    $types .= 'd';
+                } else {
+                    $types .= 's';
+                }
+            }
+
+            // bind params - call_user_func_array requires references
+            $bind_names = array();
+            $bind_names[] = $types;
+            for ($i = 0; $i < count($params); $i++) {
+                $bind_names[] = &$params[$i];
+            }
+
+            call_user_func_array(array($stmt, 'bind_param'), $bind_names);
+        }
+
+        $exec = $stmt->execute();
+        if ($exec === false) {
+            $this->ok = false;
+            $this->code = 'SQL_EXECUTE_KO';
+            $this->resource = $stmt->error;
+            $this->construct_response();
+            return $this->feedback;
+        }
+
+        // try to get result (for SELECT queries)
+        $result = $stmt->get_result();
+        if ($result === false) {
+            // query succeeded but no resultset (e.g., UPDATE/DELETE)
+            return true;
+        }
+
+        return $result;
+    }
+
+    /**
      * construct_response()
      * This method constructs the the feedback array with the operation details.
      */
