@@ -31,7 +31,8 @@ switch ($metodoHTTP) {
         $action = 'DELETE';
         break;
     case 'POST':
-        define('variables', $_POST);
+        //define('variables', $_POST);
+        define('variables', $variables);
         define('action', 'EDIT');
         $action = 'EDIT';
         break;

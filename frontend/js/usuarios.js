@@ -170,8 +170,7 @@ async function cargarDatosUsuario(id) {
       const u = res.resources[0];
       document.getElementById("id_usuario").value = u.id_usuario;
       document.getElementById("id_correo_usuario").value = u.correo_usuario;
-      document.getElementById("id_contrasena_usuario").value =
-        u.contrasena_usuario;
+      document.getElementById("id_contrasena_usuario").value = u.contrasena_usuario;
       document.getElementById("id_nombre_usuario").value = u.nombre_usuario;
       document.getElementById("id_apellidos_usuario").value =
         u.apellidos_usuario;
