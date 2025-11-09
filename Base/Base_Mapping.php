@@ -126,7 +126,6 @@ class Base_Mapping
             $this->construct_response();
             return $this->feedback;
         } else {
-            echo $this->query;
             $result_query = $this->conn->query($this->query);
 
             if ($result_query != true) {
@@ -271,6 +270,6 @@ class Base_Mapping
     {
         $this->feedback['ok'] = $this->ok;
         $this->feedback['code'] = $this->code;
-        $this->feedback['resource'] = $this->resource;
+        $this->feedback['resources'] = $this->resource;
     }
 }

@@ -10,7 +10,17 @@ function responder($data, $code = 200)
 }
 
 // Leer JSON
-parse_str(file_get_contents("php://input"), $variables);
+//parse_str(file_get_contents("php://input"), $variables);
+//$variables = json_decode(file_get_contents("php://input"), true);
+$raw = file_get_contents("php://input");
+$variables = json_decode($raw, true);
+if (!is_array($variables)) {
+    responder([
+        "ok" => false,
+        "code" => "json_decode_KO",
+        "resources" => "Error al leer los datos enviados (JSON malformado o vacío)"
+    ], 400);
+}
 $correo = $variables["correo"];
 $contrasena = $variables["contrasena"];
 
@@ -19,11 +29,11 @@ if (empty($correo) || empty($contrasena)) {
     $feedback['ok'] = false;
     $feedback['resources'] = 'Falta ';
     if (empty($correo)) {
-        $feedback['code'] = 'correo_not_exists_KO';
+        $feedback['code'] = 'correo_no_existe_KO';
         $feedback['resources'] .= 'correo ';
     }
     if (empty($contrasena)) {
-        $feedback['code'] = 'contrasena_not_exists_KO';
+        $feedback['code'] = 'contrasena_no_existe_KO';
         $feedback['resources'] .= 'contraseña ';
     }
     responder($feedback);
@@ -38,7 +48,7 @@ $usuario = $result->fetch_assoc();
 // Verificar usuario
 if (!$usuario) {
     $feedback['ok'] = false;
-    $feedback['code'] = 'usuario_not_found_KO';
+    $feedback['code'] = 'usuario_no_existe_KO';
     $feedback['resources'] = 'El usuario no existe';
     responder($feedback);
 }

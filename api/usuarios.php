@@ -12,7 +12,8 @@ function responder($texto)
     echo (json_encode($texto));
     exit();
 }
-    define('controlador', 'usuario');
+
+define('controlador', 'usuario');
 $metodoHTTP = $_SERVER['REQUEST_METHOD'];
 
 switch ($metodoHTTP) {
