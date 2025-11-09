@@ -15,15 +15,17 @@ function responder($texto)
 
 define('controlador', 'usuario');
 $metodoHTTP = $_SERVER['REQUEST_METHOD'];
+$raw = file_get_contents("php://input");
+$variables = json_decode($raw, true);
 
 switch ($metodoHTTP) {
     case 'PUT':
-        parse_str(file_get_contents("php://input"), $variables);
+        //ªparse_str(file_get_contents("php://input"), $variables);
         define('variables', $variables);
         define('action', 'ADD');
         break;
     case 'DELETE':
-        parse_str(file_get_contents("php://input"), $variables);
+        //parse_str(file_get_contents("php://input"), $variables);
         define('variables', $variables);
         define('action', 'DELETE');
         $action = 'DELETE';
@@ -60,3 +62,20 @@ if (!file_exists($controller)) {
 // incluir el fichero del controlador y instanciar la clase del controlador
 include $controller;
 $claseinstanciada = new $claseatratar;
+
+
+/* 
+ALTERNATIVA
+case 'DELETE':
+    $raw = file_get_contents("php://input");
+    $variables = json_decode($raw, true);
+
+    if (!$variables) {
+        parse_str($raw, $variables); // fallback si no vino JSON
+    }
+
+    define('variables', $variables);
+    define('action', 'DELETE');
+    $action = 'DELETE';
+    break;
+*/

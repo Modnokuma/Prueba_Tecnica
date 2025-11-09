@@ -14,16 +14,18 @@ function responder($texto)
 }
 define('controlador', 'tarea');
 $metodoHTTP = $_SERVER['REQUEST_METHOD'];
+$raw = file_get_contents("php://input");
+$variables = json_decode($raw, true);
 
 switch ($metodoHTTP) {
     case 'PUT':
-        parse_str(file_get_contents("php://input"), $variables);
+        //parse_str(file_get_contents("php://input"), $variables);
 
         define('variables', $variables);
         define('action', 'ADD');
         break;
     case 'DELETE':
-        parse_str(file_get_contents("php://input"), $variables);
+        //parse_str(file_get_contents("php://input"), $variables);
         define('variables', $variables);
         define('action', 'DELETE');
         $action = 'DELETE';
