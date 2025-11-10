@@ -24,8 +24,8 @@ CREATE TABLE `usuario` (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `usuario` ( `correo_usuario`, `contrasena_usuario`, `nombre_usuario`, `apellidos_usuario`) VALUES
-('dani@test.com', 'dani', 'Dani', 'Martnez'),
-('maria@test.com', 'maria', 'María', 'López');
+('dani@test.com', 'dani', 'dani', 'Martnez'),
+('maria@test.com', 'maria', 'maria', 'López');
 
 --
 -- Estructura de tabla para la tabla `tareas`

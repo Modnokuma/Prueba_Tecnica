@@ -23,7 +23,6 @@ $usuario_description =
                         ],
                         'SEARCH' => [
                             'max_size' => 10,
-                            'exp_reg' => '/^[0-9]*$/'
                         ]
                     ]
                 ]
@@ -49,7 +48,7 @@ $usuario_description =
                         ],
                         'SEARCH' => [
                             'max_size' => 100,
-                            'exp_reg' => '/^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})?$/'
+                            
                         ]
                     ]
                 ]

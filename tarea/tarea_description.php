@@ -22,7 +22,7 @@ $tarea_description = [
                     ],
                     'SEARCH' => [
                         'max_size' => 10,
-                        'exp_reg' => '/^[0-9]*$/'
+                        
                     ]
                 ]
             ]

@@ -150,10 +150,12 @@ class Mapping extends Base_Mapping
                 // se añadiria a la cadena de busqueda los valores
                 $query = $query . $this->construirWhereLike($nuevos_valores);
                 $query = $query . ")";
+                //$query = $query . " COLLATE latin1_general_ci";
             }
         }
-
+        
         $this->query .= $query;
+
         return $this->get_results_from_query();
     }
 

@@ -17,7 +17,7 @@ define('controlador', 'usuario');
 $metodoHTTP = $_SERVER['REQUEST_METHOD'];
 $raw = file_get_contents("php://input");
 $variables = json_decode($raw, true);
-
+error_log(print_r($_GET, true));
 switch ($metodoHTTP) {
     case 'PUT':
         //ªparse_str(file_get_contents("php://input"), $variables);
@@ -37,6 +37,7 @@ switch ($metodoHTTP) {
         $action = 'EDIT';
         break;
     case 'GET':
+        error_log(print_r($_GET, true));
         define('variables', $_GET);
         define('action', 'SEARCH');
         $action = 'SEARCH';

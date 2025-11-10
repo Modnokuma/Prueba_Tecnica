@@ -4,7 +4,6 @@ function devolverusuariosAjaxPromesa() {
   return new Promise(function (resolve, reject) {
     $.ajax({
       method: "GET",
-      //url: "http://193.147.87.202/Back/index.php",
       url: "http://localhost/Proyectos/Prueba_Tecnica/api/usuarios.php",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
@@ -51,7 +50,8 @@ function deleteUsuario(id) {
 
 //Mostrar lista de usuarios
 function getListUsuarios(listausuarios) {
-  $("#id_datosusuarios").html(""); // Lo vacias, aunque existiera algo.
+  // Vaciar la tabla antes de llenarla
+  $("#id_datosusuarios").html(""); 
 
   for (let usuario of listausuarios) {
     // Construir los valores que se pasarán a los formularios (id, correo, nombre, apellidos)
@@ -85,9 +85,7 @@ function getListUsuarios(listausuarios) {
       "</td><td>" +
       usuario["apellidos_usuario"] +
       "</td>";
-    //abrimos columna y ponemos un img con un class para que aparezca un texto al pasar el raton y un on click. Despues
-    //concatenas con lo de antes y tenemos el boton de edit. Es la misma construccion estatica pero de manera dinamica
-    //con los valores que sacamos.
+   
 
     botonedit =
       '<td><span class="material-symbols-outlined button-icon" onclick="editUsuario(' +
@@ -97,7 +95,6 @@ function getListUsuarios(listausuarios) {
       '<td><span class="material-symbols-outlined button-icon" onclick="deleteUsuario(' +
       usuario.id_usuario +
       ')">delete</span></td>';
-    //botonshowcurrent = '<td><img class="titulo_showcurrent" src="./images/detail4.png" width="50" height="50" onclick="crearformSHOWCURRENTusuario('+datosfila+');"></td>';
 
     lineatabla += botonedit + botondelete + "</tr>";
 
@@ -106,7 +103,6 @@ function getListUsuarios(listausuarios) {
 }
 
 //Añadir usuario
-//Función ajax con promesas ; usuarioADDAjaxPromesa
 function peticionADDusuarioPromesa() {
   const correo = document.getElementById("id_correo_usuario").value;
   const contrasena = document.getElementById("id_contrasena_usuario").value;
@@ -147,17 +143,17 @@ async function peticionADDusuario(e) {
 
   await peticionADDusuarioPromesa()
     .then((res) => {
-      if ((res.code = "SQL_OK")) {
+      if (res.code == "SQL_OK") {
         res.code = "add_usuario_OK";
       }
-      devolverusuariosajax(); // refresca la t
+      devolverusuariosajax(); // refresca la tabla
     })
     .catch((res) => {
       console.log("Error en la respuesta:", res.code);
     });
 }
 
-// --- CARGAR DATOS PARA EDITAR ---
+//Buscar y cargar datos
 async function cargarDatosUsuario(id) {
   try {
     const res = await $.ajax({
@@ -170,7 +166,8 @@ async function cargarDatosUsuario(id) {
       const u = res.resources[0];
       document.getElementById("id_usuario").value = u.id_usuario;
       document.getElementById("id_correo_usuario").value = u.correo_usuario;
-      document.getElementById("id_contrasena_usuario").value = u.contrasena_usuario;
+      document.getElementById("id_contrasena_usuario").value =
+      u.contrasena_usuario;
       document.getElementById("id_nombre_usuario").value = u.nombre_usuario;
       document.getElementById("id_apellidos_usuario").value =
         u.apellidos_usuario;
@@ -223,7 +220,7 @@ function peticionEDITusuarioPromesa() {
 // EDIT
 async function peticionEDITusuario(e) {
   e.preventDefault();
-    console.log("Función peticionEDITusuario() llamada");
+  console.log("Función peticionEDITusuario() llamada");
 
   await peticionEDITusuarioPromesa()
     .then((res) => {
@@ -295,9 +292,60 @@ async function peticionDELETEusuario(e) {
     });
 }
 
+//Función ajax con promesas
+function peticionSEARCHusuarioPromesa() {
+  const searchInput = document.getElementById("searchInput").value.trim();
+  const nombre = searchInput;
+  console.log("Buscando usuarios con:", nombre);
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      method: "GET",
+      url: "http://localhost/Proyectos/Prueba_Tecnica/api/usuarios.php",
+      dataType: "json",
+      data: {
+        nombre_usuario: nombre,
+      },
+    })
+      .done((res) => {
+        console.log("Respuesta del backend (SEARCH):", res);
+        if (!(res.ok == true)) {
+          reject(res);
+        } else {
+          resolve(res);
+        }
+      })
+      .fail((jqXHR) => {
+        console.log("Error en AJAX SEARCH:", jqXHR);
+        reject({ ok: false, error: "Error de conexión" });
+      });
+  });
+}
+
+async function peticionSEARCHusuario(query) {
+  console.log("Función peticionSEARCHusuario() llamada", query);
+
+  await peticionSEARCHusuarioPromesa()
+    .then((res) => {
+      if (res.code === "RECORDSET_DATOS") {
+        $("#mensaje")
+          .text("Resultados de la búsqueda obtenidos correctamente")
+          .css("color", "green");
+        getListUsuarios(res.resources);
+      } else {
+        $("#mensaje")
+          .text(" Error al obtener los resultados")
+          .css("color", "red");
+      }
+    })
+    .catch((res) => {
+      console.log("Error en la respuesta:", res.code);
+    });
+}
+
 function initUsuariosList() {
   console.log("initUsuariosList");
-  devolverusuariosajax(); // carga tabla
+  // Cargar la lista de usuarios
+  devolverusuariosajax(); 
 }
 
 function initUsuariosForm() {
@@ -305,25 +353,18 @@ function initUsuariosForm() {
   const form = document.getElementById("addUsuarioForm");
   if (form) form.addEventListener("submit", peticionADDusuario);
 }
-
-/*document.addEventListener("DOMContentLoaded", () => {
-  // Si existe la tabla, estamos en usuarios.html
-  if (document.getElementById("id_datosusuarios")) {
-    initUsuariosList();
-  }
-
-  // Si existe el form, estamos en formUsuario.html
-  if (document.getElementById("addUsuarioForm")) {
-    initUsuariosForm();
-  }
-});*/
+function volverMenu() {
+  window.location.href = "menu.html";
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   const tabla = document.getElementById("id_datosusuarios");
   const formAdd = document.getElementById("addUsuarioForm");
   const formEdit = document.getElementById("editUsuarioForm");
   const formDelete = document.getElementById("deleteUsuarioForm");
+  const searchInput = document.getElementById("searchInput");
 
+  
   if (tabla) initUsuariosList();
   if (formAdd) initUsuariosForm();
   if (formEdit) {
@@ -339,6 +380,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (id) await cargarDatosUsuario(id);
     console.log("Se ha encontrado el formDelete");
     formDelete.addEventListener("submit", peticionDELETEusuario);
+  }
+  if (searchInput) {
+    searchInput.addEventListener("keyup", async (e) => {
+      const query = e.target.value.trim();
+      if (query.length === 0) {
+        devolverusuariosajax(); // Si está vacío, recarga todo
+      } else {
+        await peticionSEARCHusuario(query);
+      }
+    });
   }
 });
 
